@@ -30,5 +30,6 @@ var app = http.createServer(
 		).resume();
 	}
     ).listen(port);
-
+var blah = 'username';
 console.log('The server is running');
+console.log(blah);
