@@ -165,7 +165,7 @@ io.sockets.on('connection', function(socket){
 			var error_message = 'send_message did not specify a message, command aborted';
 			log(error_message);
 			socket.emit('send_message_response', {
-												result: 'fail'
+												result: 'fail',
 												message: error_message
 												});
 			return;
