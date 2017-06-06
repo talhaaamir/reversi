@@ -58,6 +58,7 @@ io.sockets.on('connection', function(socket){
 		socket.broadcast.emit('log', array);
 	}
 
+	//join_room command
 	socket.on('join_room', function(payload){
 		log('join_room command'+JSON.stringify(payload));
 		if(('undefined' === typeof payload) || !payload)
@@ -131,6 +132,7 @@ io.sockets.on('connection', function(socket){
 		}
 	});
 
+	//disconnect command
 	socket.on('disconnect', function(socket){
 		log('Client disconnected'+JSON.stringify(players[socket.id]));
 
@@ -146,7 +148,7 @@ io.sockets.on('connection', function(socket){
 		}
 	});
 
-	//send message
+	//send message command
 	socket.on('send_message', function(payload){
 		log('server received a command', 'send_message', payload);
 		if(('undefined' === typeof payload) || !payload)
@@ -207,8 +209,10 @@ io.sockets.on('connection', function(socket){
 		log('Message sent to room ' + room + ' by ' + username + 'success');
 	});
 
+	//invite command
 	socket.on('invite', function(payload){
 		log('invite with '+JSON.stringify(payload));
+
 		if(('undefined' === typeof payload) || !payload)
 		{
 			var error_message = 'invite had no payload, command aborted';
@@ -272,8 +276,10 @@ io.sockets.on('connection', function(socket){
 		log('invite successful');
 	});
 
-socket.on('uninvite', function(payload){
+	//uninvite command
+	socket.on('uninvite', function(payload){
 		log('uninvite with '+JSON.stringify(payload));
+
 		if(('undefined' === typeof payload) || !payload)
 		{
 			var error_message = 'uninvite had no payload, command aborted';
@@ -337,7 +343,8 @@ socket.on('uninvite', function(payload){
 		log('uninvite successful');
 	});
 
-socket.on('game_start', function(payload){
+	//game start command
+	socket.on('game_start', function(payload){
 		log('game_start with '+JSON.stringify(payload));
 		if(('undefined' === typeof payload) || !payload)
 		{
@@ -406,9 +413,10 @@ socket.on('game_start', function(payload){
 		log('game_start successful');
 	});
 
-
+	//play token command
 	socket.on('play_token', function(payload){
 		log('play_token with '+JSON.stringify(payload));
+
 		if(('undefined' === typeof payload) || !payload)
 		{
 			var error_message = 'play_token had no payload, command aborted';
@@ -531,6 +539,9 @@ socket.on('game_start', function(payload){
 
 });
 
+
+
+
 var games = [];
 
 function create_new_game(){
@@ -585,7 +596,7 @@ function send_game_update(socket, game_id, message)
 				games[game_id].player_black.socket = '';
 				games[game_id].player_black.username = '';
 			}
-			var sacrifice = Object.keys(roomObject.sockets)[0];
+			var sacrifice = object.keys(roomObject.sockets)[0];
 			io.of('/').connected[sacrifice].leave(game_id);
 		}
 	}
@@ -618,6 +629,7 @@ function send_game_update(socket, game_id, message)
 	var success_data = {
 						result: 'success',
 						game: games[game_id],
+						message: message,
 						game_id: game_id
 	};
 	io.in(game_id).emit('game_update', success_data);

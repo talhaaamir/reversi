@@ -16,8 +16,8 @@ function GetURLParameters(whichParams)
 }
 
 var username = GetURLParameters('username');
-console.log(3);
-console.log(username);
+//console.log(3);
+//console.log(username);
 if(username == undefined || username == "")
 {
 	username = 'Anonymous_'+Math.random();
@@ -47,6 +47,7 @@ socket.on('log', function(array)
 	console.log.apply(console, array);
 });
 
+//join room response
 socket.on('join_room_response', function(payload){
 	if(payload.result == 'fail')
 	{
@@ -68,7 +69,7 @@ socket.on('join_room_response', function(payload){
 		var nodeC = $('<div></div>');
 		nodeC.addClass('socket_'+payload.socket_id);
 
-		nodeA.addClass('w-100');
+		nodeA.addClass('w=100');
 
 		nodeB.addClass('col-9 text-right');
 		nodeB.append('<h4>'+payload.username+'</h4>');
@@ -100,6 +101,7 @@ socket.on('join_room_response', function(payload){
 	newNode.slideDown(1000);
 });
 
+//player disconnected
 socket.on('player_disconnected', function(payload){
 	if(payload.result == 'fail')
 	{
@@ -122,7 +124,7 @@ socket.on('player_disconnected', function(payload){
 	newNode.slideDown(1000);
 });
 
-
+//invite
 function invite(who){
 	var payload = {};
 	payload.requested_user = who;
@@ -151,7 +153,7 @@ socket.on('invited', function(payload){
 	$('.socket_'+payload.socket_id+' button').replaceWith(newNode);
 });
 
-
+//uninvite
 function uninvite(who){
 	var payload = {};
 	payload.requested_user = who;
@@ -181,7 +183,7 @@ socket.on('uninvited', function(payload){
 });
 
 
-
+//game start
 function game_start(who){
 	var payload = {};
 	payload.requested_user = who;
@@ -204,6 +206,7 @@ socket.on('game_start_response', function(payload){
 
 });
 
+//send message
 function send_message()
 {
 	var payload = {};
@@ -234,7 +237,7 @@ function makeInviteButton(socket_id)
 	var newHTML = '<button type=\'button\' class=\'btn btn-outline-primary\'>Invite</button>';
 	var newNode = $(newHTML);
 	newNode.click(function(){
-		invite(socket_id)
+		invite(socket_id);
 	});
 	return(newNode);
 }
@@ -253,6 +256,9 @@ function makePlayButton(socket_id)
 {
 	var newHTML = '<button type=\'button\' class=\'btn btn-success\'>Play</button>';
 	var newNode = $(newHTML);
+	newNode.click(function(){
+		game_start(socket_id);
+	});
 	return(newNode);
 }
 
