@@ -2,6 +2,7 @@
 //          Set up the static file server
 //Include the static file webserver library
 var static = require('node-static');
+var num = 4;
 
 //Include the http server library
 var http = require('http');
@@ -469,7 +470,7 @@ io.sockets.on('connection', function(socket){
 
 
 		var row = payload.row;
-		if(('undefined' === typeof row) || row < 0 || row > 7)
+		if(('undefined' === typeof row) || row < 0 || row > num-1)
 		{
 			var error_message = 'play_token did not specify a valid row, command aborted';
 			log(error_message);
@@ -481,7 +482,7 @@ io.sockets.on('connection', function(socket){
 		}
 
 		var column = payload.column;
-		if(('undefined' === typeof column) || column < 0 || column > 7)
+		if(('undefined' === typeof column) || column < 0 || column > num-1)
 		{
 			var error_message = 'play_token did not specify a valid column, command aborted';
 			log(error_message);
@@ -584,7 +585,26 @@ function create_new_game(){
 	new_game.last_move_time = d.getTime();
 
 	new_game.whose_turn = 'black';
+	new_game.board = [];
 
+	
+	for(var i = 0; i < num; i++)
+	{
+		new_game.board.push([]);
+		for(var j = 0; j < num; j++)
+		{
+			new_game.board[i].push(" ");
+			console.log(new_game.board[i][j]);
+		}
+	}
+
+	new_game.board[(num/2)-1][(num/2)-1] = "w";
+	new_game.board[(num/2)-1][num/2 ] = "b";
+	new_game.board[num/2][(num/2)-1] = "b";
+	new_game.board[num/2][num/2] = "w";
+
+
+	/*
 	new_game.board = [
 						[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
 						[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
@@ -595,6 +615,7 @@ function create_new_game(){
 						[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
 						[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
 					];
+				*/
 	new_game.legal_moves = calculate_valid_moves('b', new_game.board);
 
 	return new_game;
@@ -609,11 +630,11 @@ function check_line_match(who, dr, dc, r, c, board)
 	if(board[r][c] === ' '){
 		return false; 
 	}
-	if((r+dr < 0) || (r+dr > 7))
+	if((r+dr < 0) || (r+dr > num-1))
 	{
 		return false;
 	}
-	if((c+dc < 0) || (c+dc > 7))
+	if((c+dc < 0) || (c+dc > num-1))
 	{
 		return false;
 	}
@@ -635,22 +656,22 @@ function valid_move(who, dr, dc, r, c, board)
 		return false;
 	}
 
-	if((r+dr < 0) || (r+dr > 7))
+	if((r+dr < 0) || (r+dr > num-1))
 	{
 		return false;
 	}
-	if((c+dc < 0) || (c+dc > 7))
+	if((c+dc < 0) || (c+dc > num-1))
 	{
 		return false;
 	}
 	if(board[r+dr][c+dc] != other){
 		return false;
 	}
-	if((r+dr+dr < 0) || (r+dr+dr > 7))
+	if((r+dr+dr < 0) || (r+dr+dr > num-1))
 	{
 		return false;
 	}
-	if((c+dc+dc < 0) || (c+dc+dc > 7))
+	if((c+dc+dc < 0) || (c+dc+dc > num-1))
 	{
 		return false;	
 	}
@@ -659,6 +680,18 @@ function valid_move(who, dr, dc, r, c, board)
 }
 
 function calculate_valid_moves(who, board){
+	var valid = [];
+
+	
+	for(var i = 0; i < num; i++)
+	{
+		valid.push([]);
+		for(var j = 0; j < num; j++)
+		{
+			valid[i].push(" ");
+		}
+	}
+	/*
 	var valid = 	[	[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
 						[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
 						[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
@@ -668,10 +701,10 @@ function calculate_valid_moves(who, board){
 						[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
 						[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
 					];
-
-	for(var row = 0; row < 8; row++)
+*/
+	for(var row = 0; row < num; row++)
 	{
-		for(var column = 0; column < 8; column++)
+		for(var column = 0; column < num; column++)
 		{
 			if(board[row][column] === ' '){
 				nw = valid_move(who, -1, -1, row, column, board);
@@ -697,11 +730,11 @@ function calculate_valid_moves(who, board){
 
 function flip_line(who, dr, dc, r, c, board){
 
-	if((r+dr < 0) || (r+dr > 7))
+	if((r+dr < 0) || (r+dr > num-1))
 	{
 		return false;
 	}
-	if((c+dc < 0) || (c+dc > 7))
+	if((c+dc < 0) || (c+dc > num-1))
 	{
 		return false;
 	}
@@ -803,9 +836,9 @@ function send_game_update(socket, game_id, message)
 	var count = 0;
 	var black = 0;
 	var white = 0;
-	for(row = 0; row < 8; row++)
+	for(row = 0; row < num; row++)
 	{
-		for(column = 0; column < 8; column++)
+		for(column = 0; column < num; column++)
 		{
 			if(games[game_id].legal_moves[row][column] != ' '){
 				count++;

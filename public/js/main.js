@@ -1,5 +1,5 @@
 //functions for general use
-
+var num = 4;
 //this function returns the value associated with 'whichParam' on the URL
 function GetURLParameters(whichParams)
 {
@@ -70,7 +70,7 @@ socket.on('join_room_response', function(payload){
 		var nodeC = $('<div></div>');
 		nodeC.addClass('socket_'+payload.socket_id);
 
-		nodeA.addClass('w=100');
+		nodeA.addClass('w-100');
 
 		nodeB.addClass('col-9 text-right');
 		nodeB.append('<h4>'+payload.username+'</h4>');
@@ -282,7 +282,117 @@ $(function(){
 
 
 });
+var table = document.getElementById("game_board");
 
+table_string = ''
+
+for (var row = 0; row < num; row++){
+	table_string += "<tr>";
+	for (var col = 0; col < num; col++){
+		table_string += "<td id='"+row+"_"+col+"'></td>";
+	}
+	table_string += "</tr>";
+}
+
+table.innerHTML = table_string;
+
+/*
+
+ "<tr>" +
+"              <td id='0_0'></td>" +
+"               <td id='0_1'></td>" +
+"                <td id='0_2'></td>" +
+"                 <td id='0_3'></td>" +
+"                  <td id='0_4'></td>" +
+"                   <td id='0_5'></td>" +
+"                    <td id='0_6'></td>" +
+"                     <td id='0_7'></td>" +
+"            </tr>" +
+"            <tr>" +
+"              <td id='1_0'></td>" +
+"               <td id='1_1'></td>" +
+"                <td id='1_2'></td>" +
+"                 <td id='1_3'></td>" +
+"                  <td id='1_4'></td>" +
+"                   <td id='1_5'></td>" +
+"                    <td id='1_6'></td>" +
+"                     <td id='1_7'></td>" +
+"            </tr>" +
+"            <tr>" +
+"              <td id='2_0'></td>" +
+"               <td id='2_1'></td>" +
+"                <td id='2_2'></td>" +
+"                 <td id='2_3'></td>" +
+"                  <td id='2_4'></td>" +
+"                   <td id='2_5'></td>" +
+"                    <td id='2_6'></td>" +
+"                     <td id='2_7'></td>" +
+"            </tr>" +
+"            <tr>" +
+"              <td id='3_0'></td>" +
+"               <td id='3_1'></td>" +
+"                <td id='3_2'></td>" +
+"                 <td id='3_3'></td>" +
+"                  <td id='3_4'></td>" +
+"                   <td id='3_5'></td>" +
+"                    <td id='3_6'></td>" +
+"                     <td id='3_7'></td>" +
+"            </tr>" +
+"            <tr>" +
+"              <td id='4_0'></td>" +
+"               <td id='4_1'></td>" +
+"                <td id='4_2'></td>" +
+"                 <td id='4_3'></td>" +
+"                  <td id='4_4'></td>" +
+"                   <td id='4_5'></td>" +
+"                    <td id='4_6'></td>" +
+"                     <td id='4_7'></td>" +
+"            </tr>" +
+"            <tr>" +
+"              <td id='5_0'></td>" +
+"               <td id='5_1'></td>" +
+"                <td id='5_2'></td>" +
+"                 <td id='5_3'></td>" +
+"                  <td id='5_4'></td>" +
+"                   <td id='5_5'></td>" +
+"                    <td id='5_6'></td>" +
+"                     <td id='5_7'></td>" +
+"            </tr>" +
+"            <tr>" +
+"              <td id='6_0'></td>" +
+"               <td id='6_1'></td>" +
+"                <td id='6_2'></td>" +
+"                 <td id='6_3'></td>" +
+"                  <td id='6_4'></td>" +
+"                   <td id='6_5'></td>" +
+"                    <td id='6_6'></td>" +
+"                     <td id='6_7'></td>" +
+"            </tr>" +
+"            <tr>" +
+"              <td id='7_0'></td>" +
+"               <td id='7_1'></td>" +
+"                <td id='7_2'></td>" +
+"                 <td id='7_3'></td>" +
+"                  <td id='7_4'></td>" +
+"                   <td id='7_5'></td>" +
+"                    <td id='7_6'></td>" +
+"                     <td id='7_7'></td>" +
+"            </tr>";*/
+
+
+var old_board = [];
+
+	
+	for(var i = 0; i < num; i++)
+	{
+		old_board.push([]);
+		for(var j = 0; j < num; j++)
+		{
+			old_board[i].push("?");
+			console.log(old_board[i][j]);
+		}
+	}
+/*
 var old_board = [
 					['?', '?', '?', '?', '?', '?', '?', '?'],
 					['?', '?', '?', '?', '?', '?', '?', '?'],
@@ -293,7 +403,7 @@ var old_board = [
 					['?', '?', '?', '?', '?', '?', '?', '?'],
 					['?', '?', '?', '?', '?', '?', '?', '?']
 				];
-
+*/
 var my_color = ' ';
 var interval_timer;
 
@@ -352,9 +462,9 @@ socket.on('game_update', function(payload){
 		var whitesum = 0;
 
 		var row, column;
-		for(row =  0; row < 8; row++)
+		for(row =  0; row < num; row++)
 		{
-			for(column = 0; column < 8; column++)
+			for(column = 0; column < num; column++)
 			{
 				if(board[row][column] == 'b'){
 					blacksum++;
